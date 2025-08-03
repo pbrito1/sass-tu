@@ -4,12 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
 
 export function AuthForm() {
     const form = useForm()
 
-    const handleSubmit = form.handleSubmit((data) => {
-        console.log("Form submitted with data:", data)
+    const handleSubmit = form.handleSubmit(async (data) => {
+        try {
+            console.log("Form submitted with data:", data)
+            await signIn('email', {
+                email: data.email,
+                redirect: false,
+            })
+            toast("We have sent you a sign-in link. Please check your inbox.")
+
+        } catch (error) {
+            toast("We have sent you a sign-in link. Please check your inbox.")
+            console.error("Error during sign-in:", error);
+        }
     })
 
     return (
